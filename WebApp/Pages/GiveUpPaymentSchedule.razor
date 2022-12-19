@@ -1,0 +1,88 @@
+﻿
+
+
+<H3 style="color: rgba(0,0,0,0.6); text-shadow: 5px 5px 10px #5451f5; ">Payment Schedule</H3>
+<table class="reportTable">
+        <thead class="reportHead">
+            <tr>
+                <th class="td-report" >Person</th>
+                <th class="td-report" >Description</th>
+                <th class="td-report" >Pay</th>
+                <th class="td-report" >Receive</th>
+                <th class="td-report" >Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="td-report" >Bidder</td>
+                <td class="td-report" > New purchase price</td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.BidderPay)</td>
+                <td class="td-report" ></td>
+                <td class="td-notes" >New Purchase price</td>
+            </tr>
+            <tr class="tr-alice">
+                <td class="td-report" >Bidder</td>
+                <td class="td-report" >Registration fees</td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.BidderFees)</td>
+                <td class="td-report" ></td>
+                <td class="td-notes" >@($"(New Purchase price ₹{LrrState.FmtHelper.CommaSeperatedValue(LrrState.GiveUpPaymentSchedule.BidderPay)}) * (Stamp charge multiple {LrrState.Configuration.StampChargePercentage} + Registraion fee multiple {LrrState.Configuration.RegistrationChargePercentage})")</td>
+            </tr>
+
+            <tr>
+                <td class="td-report" >Provisional buyer</td>
+                <td class="td-report" >Refund</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.ProvBuyerCapitalRefund)</td>
+                <td class="td-notes" >@($"Old Registration amount")</td>
+            </tr>
+            <tr class="tr-alice">
+                <td class="td-report" >Provisional buyer</td>
+                <td class="td-report" >Fees refund</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.ProvBuyerFeesRefund)</td>
+                <td class="td-notes" >@($"Registration fees previously paid by prov. buyer")</td>
+            </tr>
+
+            <tr>
+                <td class="td-report" >Provisional buyer</td>
+                <td class="td-report" >Compensation</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.ProvBuyerIncentive)</td>
+                <td class="td-notes" >@($"(New price ₹{LrrState.FmtHelper.CommaSeperatedValue(LrrState.GiveUpPaymentSchedule.BidderPay)} - Old reigstration amount ₹{LrrState.AuctionDetails.FmtWhiteValue} ) * (Prov. buyer incentive multiple {LrrState.Configuration.GiveUpProvBuyerIncentiveRatio})")</td>
+            </tr>
+
+            <tr class="tr-alice">
+                <td class="td-report" >Original seller</td>
+                <td class="td-report" >Additional profit</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.OriginalSellerProfit)</td>
+                <td class="td-notes" >@($"(New price ₹{LrrState.FmtHelper.CommaSeperatedValue(LrrState.GiveUpPaymentSchedule.BidderPay)} - Old reigstration amount ₹{LrrState.AuctionDetails.FmtWhiteValue} ) * (Seller Incentive multiple {LrrState.Configuration.GiveUpSellerIncentiveRatio})")</td>
+            </tr>
+            <tr>
+                <td class="td-report" >Broker </td>
+                <td class="td-report" >Additional brokerage</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.BrokerReceive)</td>
+                <td class="td-notes" >@($"(New price ₹{LrrState.FmtHelper.CommaSeperatedValue(LrrState.GiveUpPaymentSchedule.BidderPay)} - Old reigstration amount ₹{LrrState.AuctionDetails.FmtWhiteValue} ) * (Brokerage {LrrState.Configuration.Brokerage})")</td>
+            </tr>
+            <!--
+            <tr>
+                <td class="td-report" >Government Extra Tax Income</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.GovernmentExtraTax)</td>
+                <td class="td-notes" >@($"")</td>
+            </tr>-->
+            <tr class="tr-alice">
+                <td class="td-report" >Government</td>
+                <td class="td-report" >Residual profit</td>
+                <td class="td-report" ></td>
+                <td class="td-report" >₹@LrrState.FmtHelper.CommaSeperatedValue( LrrState.GiveUpPaymentSchedule.GovernmentAddlProfit)</td>
+                <td class="td-notes" >@($"Remaining amount (New price ₹{LrrState.FmtHelper.CommaSeperatedValue(LrrState.GiveUpPaymentSchedule.BidderPay)} - Old reigstration amount ₹{LrrState.AuctionDetails.FmtWhiteValue} )  - (other incentives)")</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+@code {
+    [Parameter] public Lrr.Shared.LrrState LrrState { get; set; }
+}

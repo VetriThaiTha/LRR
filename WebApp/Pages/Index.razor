@@ -1,0 +1,130 @@
+﻿@page "/"
+@using Lrr.Models;
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+@inject Lrr.Shared.LrrState LrrState
+
+
+<PageTitle>Land Registration Reform</PageTitle>
+
+<H3 style="color: rgba(0,0,0,0.6); text-shadow: 5px 5px 10px #5451f5; "> Objective:</H3>
+<p>
+Black money in real estate transactions is a multi dimensional issue. The problem is like a floating ice berg - we notice part of it but fail to see the complete depth - hence, we often ignore its full impact. This is an attempt to bring necessary attention on the issue and give a practical solution for the same.
+</p>
+
+
+<H3 style="color: rgba(0,0,0,0.6); text-shadow: 5px 5px 10px #5451f5; "> Proposal documents:</H3>
+<ul>
+    <li>
+        <a href=@Constants.Url_Document_Principle target="_blank">Principle</a> 
+            <span>The document explains the principle behind the proposal.</span>
+    </li>
+    <li>
+        <a href=@Constants.Url_Document_Plan target="_blank">Plan detail</a>
+         <span>Explains the plan in detail</span>
+    </li>
+    <li>
+        <a href="@Constants.Url_Document_Scenario" target="_blank">Scenarios</a>
+        <span>Apply the plan for a few scenarios and shows the impact.</span>
+    </li>
+    <li>
+        <a href="@Constants.Url_Document_References" target="_blank">References</a>
+        <span>Reference documents</span>
+    </li>
+    
+</ul>
+
+<H3 style="color: rgba(0,0,0,0.6); text-shadow: 5px 5px 10px #5451f5; "> Calculators:</H3>
+<ul>
+    <li>
+        <NavLink class="nav-link" href="simpleCalculator">Simple Calculator</NavLink>
+        <span>Simple calculator used to calculate payment schedule based on user inputs.</span>
+    </li>
+    <li>
+        <NavLink class="nav-link" href="simpleCalculatorBidIncrements">Calculator with bid increments</NavLink>
+        <span>Calculator which enforces <a href="https://support.bidspotter.com/hc/en-gb/articles/360006568574-What-are-auctioneer-bidding-increments-" target="_blank" >bid increments</a> for auctions.</span>
+    </li>
+    <li>
+        <NavLink class="nav-link" href="calculatorBands">Calculator with Bands </NavLink>
+        <span>Calculator which uses price bands to calculate the auction starting value (barrier price). </span>
+    </li>
+    <li>
+        <NavLink class="nav-link" href="calculatorCurve">Calculator with Curve </NavLink>
+        <span>Calculator which uses a linear curve to calculate the auction starting value (barrier price).</span>
+    </li>
+</ul>
+
+
+
+
+
+<img src=/iceberg.jpg height=200px width="200px"  />
+
+<h6 >“If all of your dreams came true, would they just change you or would they change the world?” ― Cleo Wade</h6>
+
+@code{
+    [Inject]
+    public NavigationManager navManager { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        var key = "calcName";
+        StringValues valueFromQueryString;
+        var uri = navManager.ToAbsoluteUri(navManager.Uri);
+        var foundQueryParameter = QueryHelpers.ParseQuery(uri.Query).TryGetValue(key,  out valueFromQueryString);
+
+        if (foundQueryParameter)
+        {
+            var strPage =  Convert.ToString(valueFromQueryString);
+
+            if (!string.IsNullOrWhiteSpace(strPage))
+            {
+                if(strPage.Contains("StepValue", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    navManager.NavigateTo("/simpleCalculatorBidIncrements");
+                }
+                else if(strPage.Contains("BidIncrements", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    navManager.NavigateTo("/simpleCalculatorBidIncrements");
+                }
+                else if(strPage.Contains("Bands", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    navManager.NavigateTo("/calculatorBands");
+                }
+                else if(strPage.Contains("Curve", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    navManager.NavigateTo("/calculatorCurve");
+                }
+                else 
+                {
+                    navManager.NavigateTo("/simpleCalculator");
+                }
+
+            }
+           
+        }
+
+        
+    }
+
+    
+
+    private void DisplayEdiConfig()
+    {
+        LrrState.EditConfig = true;
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        LrrState.CalculateValues();
+        InvokeAsync(() =>
+                {
+
+                    StateHasChanged();
+                });
+    }
+}

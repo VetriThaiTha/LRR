@@ -1,0 +1,74 @@
+﻿@page "/simpleCalculator"
+
+
+
+
+@inject Lrr.Shared.LrrState LrrState
+
+<PageTitle>Simple Calculator</PageTitle>
+
+<EditForm Model="@LrrState.InputData" >
+<H3 style="color: rgba(0,0,0,0.6); text-shadow: 5px 5px 10px #5451f5; ">Simple Calculator</H3>
+<table style="width:100%" >
+    <tr>
+        <td colspan="2" >
+            <RegistrationInput LrrState="LrrState" RefreshScreen="Refresh"   />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" >
+            <br />
+            <AuctionDetails LrrState="LrrState" RefreshScreen="Refresh"   />
+        </td>
+    </tr>
+    
+        @if (@LrrState.InputData.Decision == Lrr.Shared.DecisionEnum.GiveUpToHighestBid)
+        {
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <GiveUpPaymentSchedule LrrState="LrrState" />
+                </td>
+            </tr>
+        }
+        @if (@LrrState.InputData.Decision == Lrr.Shared.DecisionEnum.MatchHighestBid)
+        {
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <MatchPaymentSchedule LrrState="LrrState" />
+                </td>
+            </tr>
+        }
+    <tr>
+        <td colspan="2"><SimpleConfiguration LrrState="LrrState" RefreshScreen="Refresh" ></SimpleConfiguration></td>
+    </tr>        
+</table>
+
+
+
+</EditForm>
+
+@code{
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LrrState.Calculator = new Lrr.Shared.SimpleCalculator();
+    }
+    
+
+    private void Refresh()
+    {
+        LrrState.CalculateValues();
+        InvokeAsync(() =>
+                {
+
+                    StateHasChanged();
+                });
+    }
+}

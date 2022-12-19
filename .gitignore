@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/WebApp/.vs/BlazorWebAssemply
+/WebApp/obj
+/WebApp/bin
+/Lrr.Shared/bin
+/Lrr.Shared/obj
